@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAC - ADMIN CENTER</title>
-    <link rel="stylesheet" href="style.css">
+    <title>EAC - SUPER ADMIN PANEL</title>
     <style>
-        body { background: #020205; padding: 20px; color: white; font-family: 'Rajdhani'; }
-        .admin-form { max-width: 500px; margin: 40px auto; background: #0d0d12; padding: 25px; border: 1px solid #00f2ff; border-radius: 8px; box-shadow: 0 0 20px rgba(0,242,255,0.1); }
+        body { background: #020205; padding: 20px; color: white; font-family: 'Rajdhani', sans-serif; }
+        .admin-form { max-width: 550px; margin: 20px auto; background: #0d0d12; padding: 25px; border: 1px solid #00f2ff; border-radius: 8px; box-shadow: 0 0 20px rgba(0,242,255,0.1); }
         label { font-size: 10px; color: #555; font-family: 'Orbitron'; display: block; margin-top: 15px; letter-spacing: 1px; }
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #050508; border: 1px solid #222; color: white; border-radius: 4px; font-family: 'Rajdhani'; outline: none; }
-        .file-box { border: 1px dashed #444; padding: 20px; text-align: center; cursor: pointer; margin-top: 10px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #050508; border: 1px solid #222; color: white; border-radius: 4px; outline: none; }
         button { width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; margin-top: 25px; background: #39ff14; color: #000; }
-        #status { font-size: 10px; text-align: center; margin-top: 15px; color: #00f2ff; font-family: 'Orbitron'; }
+        
+        /* List Data Styling */
+        .data-list { margin-top: 40px; border-top: 2px solid #222; padding-top: 20px; }
+        .list-item { background: #08080c; border: 1px solid #222; padding: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border-radius: 5px; }
+        .list-info { flex: 1; margin-right: 10px; }
+        .list-info h4 { margin: 0; font-size: 14px; color: #00f2ff; }
+        .list-info span { font-size: 10px; color: #555; }
+        .del-btn { background: #ff4444; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 9px; }
     </style>
 </head>
 <body>
@@ -26,53 +31,50 @@
     </div>
 
     <div class="admin-form">
-        <h2 style="color:#00f2ff; font-family:'Orbitron'; text-align:center; font-size:16px;">COSMIC DATA UPLOADER</h2>
-        
-        <label>JUDUL OBJEK</label>
-        <input type="text" id="title" placeholder="Nama Objek...">
+        <h2 style="color:#00f2ff; font-family:'Orbitron'; text-align:center; font-size:16px;">COSMIC DATA MANAGER</h2>
 
-        <label>KATEGORI</label>
-        <select id="category">
-            <option value="Planet">Planet</option>
-            <option value="Galaksi">Galaksi</option>
-            <option value="Bintang">Bintang</option>
-            <option value="Objek">Objek</option>
-            <option value="Misteri">Misteri</option>
-            <option value="Teori">Teori</option>
+        <label>PILIH KATEGORI KONTROL</label>
+        <select id="dataType" style="border-color:#39ff14; color:#39ff14;" onchange="loadExistingData()">
+            <option value="cosmic_data">EDUKASI</option>
+            <option value="cosmic_music">MUSIC</option>
+            <option value="cosmic_info">INFORMASI</option>
+            <option value="cosmic_comments">KOMENTAR USER</option>
         </select>
 
-        <label>METODE GAMBAR</label>
-        <select id="uploadMethod" onchange="toggleMethod()">
-            <option value="file">GALERI (ImgBB)</option>
-            <option value="url">LINK LANGSUNG</option>
-        </select>
+        <hr style="border:1px solid #111; margin-top:20px;">
 
-        <div id="fileMethod">
-            <label>PILIH DARI GALERI</label>
-            <div class="file-box" onclick="document.getElementById('fileInput').click()">
-                <span id="fileName">Klik untuk pilih gambar</span>
-                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="updateName()">
+        <div id="uploadForm">
+            <label>JUDUL / NAMA</label>
+            <input type="text" id="title" placeholder="Input...">
+            
+            <div id="catBox">
+                <label>KATEGORI (KHUSUS EDU)</label>
+                <select id="category">
+                    <option value="Planet">Planet</option><option value="Galaksi">Galaksi</option>
+                    <option value="Bintang">Bintang</option><option value="Objek">Objek</option>
+                    <option value="Misteri">Misteri</option><option value="Teori">Teori</option>
+                </select>
             </div>
-        </div>
 
-        <div id="urlMethod" style="display:none;">
             <label>URL GAMBAR</label>
-            <input type="text" id="imageUrlLink" placeholder="https://...">
+            <input type="text" id="imageUrl" placeholder="https://...">
+            <label>DESKRIPSI</label>
+            <textarea id="desc" rows="3"></textarea>
+            <label>LINK TARGET (WIKI/MP3)</label>
+            <input type="text" id="mainLink" placeholder="URL...">
+
+            <button onclick="processUpload()" id="btnUp">SEND TO DATABASE</button>
         </div>
 
-        <label>PENJELASAN</label>
-        <textarea id="desc" rows="4"></textarea>
-
-        <label>LINK ARTIKEL</label>
-        <input type="text" id="fullLink" placeholder="Wikipedia/NASA Link...">
-
-        <button onclick="processUpload()" id="btnUp">PUBLISH TO CLOUD</button>
-        <div id="status"></div>
+        <div class="data-list">
+            <h3 style="font-family:'Orbitron'; font-size:12px; color:#ffcc00; margin-bottom:15px;">EXISTING DATA (TAP TO DELETE)</h3>
+            <div id="displayList"></div>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB3XFfAwJbh0WHd7U_2tEazVgEg2bzbKTQ",
@@ -87,57 +89,72 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Global functions for buttons
         window.auth = () => {
-            if(document.getElementById('pass').value === "ADMIN EAC") document.getElementById('login').style.display='none';
-            else alert("Key Salah!");
+            if(document.getElementById('pass').value === "ADMIN EAC") {
+                document.getElementById('login').style.display='none';
+                loadExistingData();
+            } else alert("Key Salah!");
         };
 
-        window.toggleMethod = () => {
-            const m = document.getElementById('uploadMethod').value;
-            document.getElementById('fileMethod').style.display = m === 'file' ? 'block' : 'none';
-            document.getElementById('urlMethod').style.display = m === 'url' ? 'block' : 'none';
+        // --- FUNGSI TAMPILKAN DATA & HAPUS ---
+        window.loadExistingData = () => {
+            const type = document.getElementById('dataType').value;
+            const listDiv = document.getElementById('displayList');
+            const catBox = document.getElementById('catBox');
+            
+            // Sembunyikan form kategori kalau bukan Edukasi/Comments
+            catBox.style.display = (type === 'cosmic_data') ? 'block' : 'none';
+
+            onValue(ref(db, type), (snap) => {
+                listDiv.innerHTML = '';
+                const data = snap.val();
+                if(!data) { listDiv.innerHTML = "<p style='font-size:10px; color:#444;'>Kosong...</p>"; return; }
+
+                Object.entries(data).reverse().forEach(([key, val]) => {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="list-info">
+                            <h4>${val.title || val.name || 'No Title'}</h4>
+                            <span>ID: ${key.substring(0,10)}...</span>
+                        </div>
+                        <button class="del-btn" onclick="deleteData('${type}', '${key}')">HAPUS</button>
+                    `;
+                    listDiv.appendChild(item);
+                });
+            });
         };
 
-        window.updateName = () => {
-            const f = document.getElementById('fileInput').files[0];
-            if(f) document.getElementById('fileName').innerText = f.name;
-        };
-
-        window.processUpload = async () => {
-            const method = document.getElementById('uploadMethod').value;
-            const btn = document.getElementById('btnUp');
-            btn.disabled = true; btn.innerText = "PROCESSING...";
-
-            if(method === 'file') {
-                const file = document.getElementById('fileInput').files[0];
-                const formData = new FormData();
-                formData.append("image", file);
-                try {
-                    const res = await fetch("https://api.imgbb.com/1/upload?key=1771bef0a804415dcb82b2b9d9dc5034", { method: "POST", body: formData });
-                    const json = await res.json();
-                    saveToFirebase(json.data.url);
-                } catch(e) { alert("Upload Gagal!"); btn.disabled = false; }
-            } else {
-                saveToFirebase(document.getElementById('imageUrlLink').value);
+        window.deleteData = (type, key) => {
+            if(confirm("Yakin mau hapus data ini secara permanen dari Cosmos?")) {
+                remove(ref(db, `${type}/${key}`))
+                .then(() => alert("Data Berhasil Dihapus!"))
+                .catch((e) => alert("Gagal: " + e));
             }
         };
 
-        function saveToFirebase(url) {
-            const dataRef = ref(db, 'cosmic_data');
-            const data = {
+        // --- FUNGSI UPLOAD ---
+        window.processUpload = () => {
+            const type = document.getElementById('dataType').value;
+            const btn = document.getElementById('btnUp');
+            btn.disabled = true;
+
+            const payload = {
                 title: document.getElementById('title').value,
-                category: document.getElementById('category').value,
-                img: url,
+                img: document.getElementById('imageUrl').value,
                 desc: document.getElementById('desc').value,
-                link: document.getElementById('fullLink').value || "#",
+                link: document.getElementById('mainLink').value || "#",
                 time: Date.now()
             };
-            push(dataRef, data).then(() => {
-                document.getElementById('status').innerText = "ONLINE!";
-                setTimeout(() => window.location.href="index.html", 1000);
+            if(type === 'cosmic_data') payload.category = document.getElementById('category').value;
+
+            push(ref(db, type), payload).then(() => {
+                alert("Berhasil!");
+                btn.disabled = false;
+                document.getElementById('title').value = '';
+                document.getElementById('imageUrl').value = '';
             });
-        }
+        };
     </script>
 </body>
 </html>
