@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EAC - COSMIC DATABASE V3</title>
+    <title>EAC - COSMIC DATABASE V4</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -16,11 +16,18 @@
         <div class="search-container">
             <input type="text" id="searchInput" placeholder="Cari Informasi Kosmik..." onkeyup="searchData()">
         </div>
-        <div class="filter-grid" id="filterEdu">
+        <div class="status-bar">
+            <span>SISTEM AKTIF</span>
+            <span class="signal">SIGNAL <b id="ping">169ms</b></span>
+        </div>
+        <div class="filter-grid">
             <button class="filter-btn active" onclick="filterData('all')">SEMUA</button>
             <button class="filter-btn" onclick="filterData('Planet')">PLANET</button>
             <button class="filter-btn" onclick="filterData('Galaksi')">GALAKSI</button>
+            <button class="filter-btn" onclick="filterData('Bintang')">BINTANG</button>
+            <button class="filter-btn" onclick="filterData('Objek')">OBJEK</button>
             <button class="filter-btn" onclick="filterData('Misteri')">MISTERI</button>
+            <button class="filter-btn" onclick="filterData('Teori')">TEORI</button>
         </div>
     </header>
 
@@ -41,12 +48,11 @@
     <section id="comSection" class="tab-content" style="display:none;">
         <div class="iea-header">
             <span>IEA NETWORK</span>
-            <div class="iea-icons">
-                <svg viewBox="0 0 24 24" width="20" stroke="white" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                <svg viewBox="0 0 24 24" width="20" stroke="white" fill="none" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            <div class="iea-icons" onclick="showProfile()">
+                <svg width="24" viewBox="0 0 24 24" fill="var(--cyan)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             </div>
         </div>
-
+        
         <div id="chatAuth" class="auth-box">
             <input type="text" id="chatUser" placeholder="Nama Akun...">
             <button onclick="loginChat()">LOGIN KE IEA</button>
@@ -55,26 +61,44 @@
         <div id="commentContainer" class="iea-feed"></div>
 
         <div id="replyIndicator">
-            Membalas: <span id="replyTargetName"></span> 
-            <span onclick="cancelReply()" style="color:#ff4444; float:right;">BATAL</span>
+            Debat: <span id="replyTargetName"></span> 
+            <span onclick="cancelReply()" style="color:#ff4444; float:right; cursor:pointer;">BATAL</span>
         </div>
 
         <div class="iea-input-bar" id="chatInputBar" style="display:none;">
             <button class="add-btn">+</button>
             <input type="text" id="comText" placeholder="Tulis Hipotesis...">
-            <button class="send-btn" onclick="sendComment()">
-                <svg viewBox="0 0 24 24" width="20" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-            </button>
+            <button class="send-btn" onclick="sendComment()">➤</button>
         </div>
     </section>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content profile-card">
+            <span class="close-btn" onclick="closeProfile()">&times;</span>
+            <div class="profile-header">
+                <div class="avatar-large">👤</div>
+                <h2 id="profName">Razeerh</h2>
+                <span class="rank">NOVICE RESEARCHER</span>
+                <p class="bio">Bio Kosong</p>
+                <div class="tag-box">General Science</div>
+            </div>
+            <div class="stats-grid">
+                <div><b>0</b><br>XP</div>
+                <div><b>1</b><br>LVL</div>
+                <div><b>0</b><br>KUTIPAN</div>
+            </div>
+            <button class="edit-btn">EDIT PROFIL</button>
+            <button class="logout-btn" onclick="logout()">LOGOUT</button>
+        </div>
+    </div>
 
     <div class="system-footer">SISTEM TERKENDALI AMAN</div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('edu', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>EDU</span></div>
-        <div class="nav-item" onclick="switchTab('music', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>BEAT</span></div>
-        <div class="nav-item" onclick="switchTab('info', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>INFO</span></div>
-        <div class="nav-item" onclick="switchTab('com', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>CHAT</span></div>
+        <div class="nav-item active" onclick="switchTab('edu', this)"><span>EDU</span></div>
+        <div class="nav-item" onclick="switchTab('music', this)"><span>BEAT</span></div>
+        <div class="nav-item" onclick="switchTab('info', this)"><span>INFO</span></div>
+        <div class="nav-item" onclick="switchTab('com', this)"><span>CHAT</span></div>
     </nav>
 
     <script type="module" src="script.js"></script>
