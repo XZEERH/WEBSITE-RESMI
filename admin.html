@@ -3,72 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAC - SUPER ADMIN PANEL</title>
+    <title>EAC - COSMIC ADMIN V3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { background: #020205; padding: 20px; color: white; font-family: 'Rajdhani', sans-serif; }
-        .admin-form { max-width: 550px; margin: 20px auto; background: #0d0d12; padding: 25px; border: 1px solid #00f2ff; border-radius: 8px; box-shadow: 0 0 20px rgba(0,242,255,0.1); }
-        label { font-size: 10px; color: #555; font-family: 'Orbitron'; display: block; margin-top: 15px; letter-spacing: 1px; }
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #050508; border: 1px solid #222; color: white; border-radius: 4px; outline: none; }
-        button { width: 100%; padding: 15px; border: none; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; margin-top: 25px; background: #39ff14; color: #000; }
+        :root { --cyan: #00f2ff; --green: #39ff14; --red: #ff4444; --bg: #020205; }
+        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; margin: 0; padding: 20px; padding-bottom: 50px; }
         
-        /* List Data Styling */
-        .data-list { margin-top: 40px; border-top: 2px solid #222; padding-top: 20px; }
-        .list-item { background: #08080c; border: 1px solid #222; padding: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border-radius: 5px; }
-        .list-info { flex: 1; margin-right: 10px; }
-        .list-info h4 { margin: 0; font-size: 14px; color: #00f2ff; }
-        .list-info span { font-size: 10px; color: #555; }
-        .del-btn { background: #ff4444; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 9px; }
+        /* LOGIN OVERLAY */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        
+        .admin-card { max-width: 500px; margin: 0 auto; background: #0d0d12; border: 1px solid var(--cyan); border-radius: 12px; padding: 25px; box-shadow: 0 0 20px rgba(0,242,255,0.1); }
+        h2 { font-family: 'Orbitron'; font-size: 16px; text-align: center; color: var(--cyan); margin-bottom: 25px; letter-spacing: 2px; }
+        
+        label { display: block; font-family: 'Orbitron'; font-size: 9px; color: #555; margin-top: 15px; letter-spacing: 1px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 6px; background: #050508; border: 1px solid #222; color: white; border-radius: 6px; font-family: 'Rajdhani'; box-sizing: border-box; }
+        input:focus { border-color: var(--cyan); }
+
+        .btn-primary { width: 100%; padding: 15px; background: var(--green); color: black; border: none; border-radius: 6px; font-family: 'Orbitron'; font-weight: bold; margin-top: 25px; cursor: pointer; transition: 0.3s; }
+        .btn-primary:disabled { background: #1a3311; color: #555; }
+
+        /* DATA LIST SECTION */
+        .management-section { margin-top: 40px; border-top: 1px solid #1a1a1a; padding-top: 20px; }
+        .list-item { background: #08080c; border: 1px solid #1a1a1a; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; animation: fadeIn 0.4s ease; }
+        .info-box h4 { margin: 0; font-size: 14px; color: var(--cyan); }
+        .info-box span { font-size: 10px; color: #444; font-family: 'Orbitron'; }
+        
+        .btn-delete { background: var(--red); color: white; border: none; padding: 8px 12px; border-radius: 4px; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="login" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#020205; z-index:999; display:flex; align-items:center; justify-content:center;">
-        <div class="admin-form" style="text-align:center;">
-            <h2 style="color:#00f2ff; font-family:'Orbitron'; font-size:18px;">EAC ACCESS CONTROL</h2>
-            <input type="password" id="pass" placeholder="Enter Admin Key...">
-            <button onclick="auth()" style="background:#00f2ff;">AUTHENTICATE</button>
+    <div id="loginOverlay">
+        <div class="admin-card">
+            <h2>EAC ACCESS KEY</h2>
+            <input type="password" id="adminPass" placeholder="Masukkan Password Owner...">
+            <button class="btn-primary" onclick="checkAuth()">AUTHENTICATE</button>
         </div>
     </div>
 
-    <div class="admin-form">
-        <h2 style="color:#00f2ff; font-family:'Orbitron'; text-align:center; font-size:16px;">COSMIC DATA MANAGER</h2>
+    <div class="admin-card">
+        <h2>COSMIC CONTROL PANEL</h2>
 
-        <label>PILIH KATEGORI KONTROL</label>
-        <select id="dataType" style="border-color:#39ff14; color:#39ff14;" onchange="loadExistingData()">
-            <option value="cosmic_data">EDUKASI</option>
-            <option value="cosmic_music">MUSIC</option>
-            <option value="cosmic_info">INFORMASI</option>
-            <option value="cosmic_comments">KOMENTAR USER</option>
+        <label>TARGET DATABASE</label>
+        <select id="targetPath" onchange="syncUI()">
+            <option value="cosmic_data">DATABASE EDUKASI</option>
+            <option value="cosmic_music">DATABASE MUSIC (BEAT)</option>
+            <option value="cosmic_info">DATABASE INFORMASI</option>
+            <option value="cosmic_comments">TRANSMISI KOMENTAR</option>
         </select>
 
-        <hr style="border:1px solid #111; margin-top:20px;">
+        <div id="formUploader">
+            <label id="labelTitle">JUDUL KONTEN</label>
+            <input type="text" id="inpTitle" placeholder="Nama objek/lagu/info...">
 
-        <div id="uploadForm">
-            <label>JUDUL / NAMA</label>
-            <input type="text" id="title" placeholder="Input...">
-            
-            <div id="catBox">
-                <label>KATEGORI (KHUSUS EDU)</label>
-                <select id="category">
-                    <option value="Planet">Planet</option><option value="Galaksi">Galaksi</option>
-                    <option value="Bintang">Bintang</option><option value="Objek">Objek</option>
-                    <option value="Misteri">Misteri</option><option value="Teori">Teori</option>
+            <div id="eduOnly">
+                <label>KATEGORI KOSMIK</label>
+                <select id="inpCat">
+                    <option value="Planet">Planet</option>
+                    <option value="Galaksi">Galaksi</option>
+                    <option value="Bintang">Bintang</option>
+                    <option value="Objek">Objek</option>
+                    <option value="Misteri">Misteri</option>
+                    <option value="Teori">Teori</option>
                 </select>
             </div>
 
-            <label>URL GAMBAR</label>
-            <input type="text" id="imageUrl" placeholder="https://...">
-            <label>DESKRIPSI</label>
-            <textarea id="desc" rows="3"></textarea>
-            <label>LINK TARGET (WIKI/MP3)</label>
-            <input type="text" id="mainLink" placeholder="URL...">
+            <label>URL GAMBAR / COVER</label>
+            <input type="text" id="inpImg" placeholder="https://link-gambar.com/file.jpg">
 
-            <button onclick="processUpload()" id="btnUp">SEND TO DATABASE</button>
+            <label>DESKRIPSI LENGKAP</label>
+            <textarea id="inpDesc" rows="4" placeholder="Tulis penjelasan di sini..."></textarea>
+
+            <label id="labelLink">LINK TARGET (WIKI / MP3)</label>
+            <input type="text" id="inpLink" placeholder="https://...">
+
+            <button class="btn-primary" id="btnUpload" onclick="handleUpload()">PUBLISH TO SYSTEM</button>
         </div>
 
-        <div class="data-list">
-            <h3 style="font-family:'Orbitron'; font-size:12px; color:#ffcc00; margin-bottom:15px;">EXISTING DATA (TAP TO DELETE)</h3>
-            <div id="displayList"></div>
+        <div class="management-section">
+            <h3 style="font-family:'Orbitron'; font-size:11px; color:var(--green); margin-bottom:15px;">MANAGE EXISTING DATA</h3>
+            <div id="dataListContainer">
+                <p style="text-align:center; font-size:10px; color:#333;">Loading data...</p>
+            </div>
         </div>
     </div>
 
@@ -76,6 +94,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // Konfigurasi DB EAC lu
         const firebaseConfig = {
             apiKey: "AIzaSyB3XFfAwJbh0WHd7U_2tEazVgEg2bzbKTQ",
             authDomain: "databaseeac.firebaseapp.com",
@@ -89,70 +108,101 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.auth = () => {
-            if(document.getElementById('pass').value === "ADMIN EAC") {
-                document.getElementById('login').style.display='none';
-                loadExistingData();
-            } else alert("Key Salah!");
-        };
-
-        // --- FUNGSI TAMPILKAN DATA & HAPUS ---
-        window.loadExistingData = () => {
-            const type = document.getElementById('dataType').value;
-            const listDiv = document.getElementById('displayList');
-            const catBox = document.getElementById('catBox');
-            
-            // Sembunyikan form kategori kalau bukan Edukasi/Comments
-            catBox.style.display = (type === 'cosmic_data') ? 'block' : 'none';
-
-            onValue(ref(db, type), (snap) => {
-                listDiv.innerHTML = '';
-                const data = snap.val();
-                if(!data) { listDiv.innerHTML = "<p style='font-size:10px; color:#444;'>Kosong...</p>"; return; }
-
-                Object.entries(data).reverse().forEach(([key, val]) => {
-                    const item = document.createElement('div');
-                    item.className = 'list-item';
-                    item.innerHTML = `
-                        <div class="list-info">
-                            <h4>${val.title || val.name || 'No Title'}</h4>
-                            <span>ID: ${key.substring(0,10)}...</span>
-                        </div>
-                        <button class="del-btn" onclick="deleteData('${type}', '${key}')">HAPUS</button>
-                    `;
-                    listDiv.appendChild(item);
-                });
-            });
-        };
-
-        window.deleteData = (type, key) => {
-            if(confirm("Yakin mau hapus data ini secara permanen dari Cosmos?")) {
-                remove(ref(db, `${type}/${key}`))
-                .then(() => alert("Data Berhasil Dihapus!"))
-                .catch((e) => alert("Gagal: " + e));
+        // --- AUTH ---
+        window.checkAuth = () => {
+            const pass = document.getElementById('adminPass').value;
+            if(pass === "ADMIN EAC") { // Sesuai data lu
+                document.getElementById('loginOverlay').style.display = 'none';
+                syncUI();
+            } else {
+                alert("ACCESS DENIED: WRONG KEY");
             }
         };
 
-        // --- FUNGSI UPLOAD ---
-        window.processUpload = () => {
-            const type = document.getElementById('dataType').value;
-            const btn = document.getElementById('btnUp');
-            btn.disabled = true;
+        // --- UI SYNC ---
+        window.syncUI = () => {
+            const path = document.getElementById('targetPath').value;
+            const eduBox = document.getElementById('eduOnly');
+            const upBox = document.getElementById('formUploader');
+            
+            // Atur tampilan form berdasarkan kategori
+            eduBox.style.display = (path === 'cosmic_data') ? 'block' : 'none';
+            upBox.style.display = (path === 'cosmic_comments') ? 'none' : 'block';
 
+            loadDataList(path);
+        };
+
+        // --- LOAD & DELETE LOGIC ---
+        function loadDataList(path) {
+            const container = document.getElementById('dataListContainer');
+            onValue(ref(db, path), (snapshot) => {
+                container.innerHTML = '';
+                const data = snapshot.val();
+                
+                if(!data) {
+                    container.innerHTML = `<p style="text-align:center; font-size:10px; color:#333;">DATABASE KOSONG</p>`;
+                    return;
+                }
+
+                Object.entries(data).reverse().forEach(([key, val]) => {
+                    const div = document.createElement('div');
+                    div.className = 'list-item';
+                    div.innerHTML = `
+                        <div class="info-box">
+                            <h4>${val.title || val.name || "Untitled"}</h4>
+                            <span>TYPE: ${path.replace('cosmic_', '').toUpperCase()}</span>
+                        </div>
+                        <button class="btn-delete" onclick="deleteEntry('${path}', '${key}')">HAPUS</button>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        window.deleteEntry = (path, key) => {
+            if(confirm("Hapus data ini secara permanen dari database?")) {
+                remove(ref(db, `${path}/${key}`))
+                .then(() => alert("BERHASIL DIHAPUS"))
+                .catch(e => alert("ERROR: " + e));
+            }
+        };
+
+        // --- UPLOAD LOGIC ---
+        window.handleUpload = () => {
+            const path = document.getElementById('targetPath').value;
+            const btn = document.getElementById('btnUpload');
+            
             const payload = {
-                title: document.getElementById('title').value,
-                img: document.getElementById('imageUrl').value,
-                desc: document.getElementById('desc').value,
-                link: document.getElementById('mainLink').value || "#",
+                title: document.getElementById('inpTitle').value,
+                img: document.getElementById('inpImg').value,
+                desc: document.getElementById('inpDesc').value,
+                link: document.getElementById('inpLink').value || "#",
                 time: Date.now()
             };
-            if(type === 'cosmic_data') payload.category = document.getElementById('category').value;
 
-            push(ref(db, type), payload).then(() => {
-                alert("Berhasil!");
+            if(path === 'cosmic_data') {
+                payload.category = document.getElementById('inpCat').value;
+            }
+
+            if(!payload.title || !payload.img) return alert("JUDUL & GAMBAR WAJIB ISI!");
+
+            btn.disabled = true;
+            btn.innerText = "UPLOADING...";
+
+            push(ref(db, path), payload)
+            .then(() => {
+                alert("DATABASE UPDATED!");
                 btn.disabled = false;
-                document.getElementById('title').value = '';
-                document.getElementById('imageUrl').value = '';
+                btn.innerText = "PUBLISH TO SYSTEM";
+                // Reset form
+                document.getElementById('inpTitle').value = '';
+                document.getElementById('inpImg').value = '';
+                document.getElementById('inpDesc').value = '';
+                document.getElementById('inpLink').value = '';
+            })
+            .catch(e => {
+                alert("FAILED: " + e);
+                btn.disabled = false;
             });
         };
     </script>
