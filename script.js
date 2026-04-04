@@ -78,28 +78,37 @@ function renderCards(data, tab) {
     if(!container) return;
     container.innerHTML = '';
 
-    data.forEach(item => {
+    data.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'card fade-in';
 
-        // SISTEM BARU: MUSIC PLAYER TERINTEGRASI
         if(tab === 'music_data') {
+            const audioId = `audio-${index}`;
             card.style.borderLeft = "3px solid #39ff14";
             card.innerHTML = `
                 <img src="${item.img}" onerror="this.src='https://via.placeholder.com/400x200?text=No+Cover'">
                 <div class="card-info">
-                    <h3 style="color:#39ff14; font-family:'Orbitron'; font-size:14px; margin-bottom:10px;">${item.title}</h3>
+                    <h3 style="color:#39ff14; font-family:'Orbitron'; font-size:14px; margin-bottom:15px;">${item.title}</h3>
                     
-                    <audio controls style="width: 100%; height: 32px; filter: invert(100%) hue-rotate(90deg) brightness(1.5); margin-bottom:10px;">
-                        <source src="${item.link}" type="audio/mpeg">
-                        Gak support audio jier.
-                    </audio>
+                    <audio id="${audioId}" src="${item.link}"></audio>
+                    
+                    <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:15px; background:rgba(255,255,255,0.05); padding:10px; border-radius:10px;">
+                        <button onclick="controlAudio('${audioId}', 'rewind')" style="background:none; border:none; color:#39ff14; cursor:pointer; display:flex;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"></polyline><polyline points="18 17 13 12 18 7"></polyline></svg>
+                        </button>
+
+                        <button onclick="controlAudio('${audioId}', 'play')" id="btn-${audioId}" style="background:#39ff14; border:none; color:black; width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);">
+                            <svg id="icon-${audioId}" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"></path></svg>
+                        </button>
+
+                        <button onclick="controlAudio('${audioId}', 'forward')" style="background:none; border:none; color:#39ff14; cursor:pointer; display:flex;">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+                        </button>
+                    </div>
 
                     <a href="${item.link}" target="_blank" class="access-btn" style="padding:8px; font-size:10px; border-color:#39ff14; color:#39ff14; font-family:'Orbitron'; text-decoration:none; display:block; text-align:center;">DOWNLOAD MP3</a>
                 </div>`;
-        } 
-        // SISTEM LAMA: EDUKASI, BERITA, KOMUNITAS
-        else {
+        } else {
             card.innerHTML = `
                 <div style="position:absolute; top:10px; right:10px; background:#ffcc00; color:black; font-size:9px; font-weight:bold; padding:3px 8px; border-radius:3px; z-index:2; font-family:'Orbitron';">${(item.category || tab).toUpperCase()}</div>
                 <img src="${item.img}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Image+Not+Found'">
@@ -113,7 +122,34 @@ function renderCards(data, tab) {
     });
 }
 
-// --- OLD SYSTEMS (DIPERTAHANKAN) ---
+// --- AUDIO LOGIC ---
+window.controlAudio = (id, action) => {
+    const audio = document.getElementById(id);
+    const btnIcon = document.getElementById(`icon-${id}`);
+    
+    if (action === 'play') {
+        if (audio.paused) {
+            // Stop semua audio lain yang sedang berputar
+            document.querySelectorAll('audio').forEach(a => { if(a.id !== id) a.pause(); });
+            // Reset semua icon ke play
+            document.querySelectorAll('[id^="icon-audio"]').forEach(i => {
+                i.innerHTML = '<path d="M5 3l14 9-14 9V3z"></path>';
+            });
+            
+            audio.play();
+            btnIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+        } else {
+            audio.pause();
+            btnIcon.innerHTML = '<path d="M5 3l14 9-14 9V3z"></path>';
+        }
+    } else if (action === 'forward') {
+        audio.currentTime += 10;
+    } else if (action === 'rewind') {
+        audio.currentTime -= 10;
+    }
+};
+
+// --- OLD SYSTEMS (STAY UNCHANGED) ---
 window.searchData = () => {
     const q = document.getElementById('searchInput').value.toLowerCase();
     const filtered = cosmicData.filter(i => 
