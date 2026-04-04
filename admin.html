@@ -9,80 +9,63 @@
         :root { --cyan: #00f2ff; --green: #39ff14; --red: #ff4444; --bg: #050508; --card: #0d0d12; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
+        /* LOGIN OVERLAY */
+        #loginOverlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: #050508; z-index: 10000; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .login-box {
+            background: var(--card); padding: 30px; border-radius: 15px;
+            border: 1px solid var(--cyan); text-align: center; width: 100%; max-width: 320px;
+            box-shadow: 0 0 20px rgba(0,242,255,0.2);
+        }
+
         body { 
-            background: var(--bg); 
-            color: white; 
-            font-family: 'Rajdhani', sans-serif; 
-            padding: 20px; 
-            background-image: radial-gradient(circle at top right, rgba(0,242,255,0.05), transparent);
+            background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; 
+            padding: 20px; display: none; /* Sembunyiin dulu sebelum login */
         }
 
         .admin-logo { font-family: 'Orbitron'; text-align: center; margin-bottom: 25px; letter-spacing: 3px; font-size: 20px; }
         .admin-logo span { color: var(--cyan); text-shadow: 0 0 15px var(--cyan); }
 
         /* TAB NAVIGATION */
-        .admin-tabs { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 8px; 
-            margin-bottom: 25px; 
-        }
+        .admin-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 25px; }
         .tab-item { 
             background: var(--card); border: 1px solid #1a1a1a; padding: 12px 5px; 
             display: flex; flex-direction: column; align-items: center; 
             border-radius: 8px; cursor: pointer; transition: 0.3s;
         }
-        .tab-item svg { width: 20px; height: 20px; margin-bottom: 6px; stroke: #444; transition: 0.3s; }
+        .tab-item svg { width: 20px; height: 20px; margin-bottom: 6px; stroke: #444; }
         .tab-item span { font-size: 7px; font-family: 'Orbitron'; color: #444; font-weight: bold; }
-
-        .tab-item.active { border-color: var(--cyan); background: rgba(0,242,255,0.05); box-shadow: 0 0 10px rgba(0,242,255,0.1); }
+        .tab-item.active { border-color: var(--cyan); background: rgba(0,242,255,0.05); }
         .tab-item.active svg { stroke: var(--cyan); filter: drop-shadow(0 0 5px var(--cyan)); }
         .tab-item.active span { color: var(--cyan); }
 
-        /* FORM STYLING */
-        .form-card { 
-            background: var(--card); padding: 20px; border-radius: 12px; 
-            border: 1px solid #1a1a1a; margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        /* FORM & DATA */
+        .form-card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #1a1a1a; margin-bottom: 25px; }
         .form-card h2 { font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; color: var(--cyan); border-left: 3px solid var(--cyan); padding-left: 10px; }
-        
-        input, textarea, select { 
-            width: 100%; background: #08080a; border: 1px solid #222; 
-            padding: 12px; color: white; margin-bottom: 12px; border-radius: 6px; 
-            outline: none; font-family: 'Rajdhani'; transition: 0.3s;
-        }
-        input:focus, textarea:focus { border-color: var(--cyan); background: #101015; }
+        input, textarea, select { width: 100%; background: #08080a; border: 1px solid #222; padding: 12px; color: white; margin-bottom: 12px; border-radius: 6px; outline: none; font-family: 'Rajdhani'; }
+        #btnSubmit { width: 100%; padding: 15px; background: var(--cyan); color: black; border: none; font-family: 'Orbitron'; font-weight: bold; border-radius: 6px; cursor: pointer; }
 
-        #btnSubmit { 
-            width: 100%; padding: 15px; background: var(--cyan); color: black; 
-            border: none; font-family: 'Orbitron'; font-weight: bold; border-radius: 6px;
-            cursor: pointer; transition: 0.3s; margin-top: 5px;
-        }
-        #btnSubmit:active { transform: scale(0.98); opacity: 0.8; }
-
-        /* LIST DATA */
-        .data-list h3 { font-family: 'Orbitron'; font-size: 10px; margin-bottom: 15px; color: #555; text-align: center; }
-        .admin-item-row { 
-            display: flex; align-items: center; background: #0d0d12; padding: 12px; 
-            border-radius: 8px; margin-bottom: 10px; border: 1px solid #1a1a1a;
-            animation: fadeIn 0.4s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .admin-item-row img { width: 45px; height: 45px; border-radius: 4px; object-fit: cover; border: 1px solid #333; }
+        .admin-item-row { display: flex; align-items: center; background: #0d0d12; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #1a1a1a; }
+        .admin-item-row img { width: 45px; height: 45px; border-radius: 4px; object-fit: cover; }
         .item-info { flex-grow: 1; margin-left: 12px; }
-        .item-info strong { display: block; font-size: 14px; color: #eee; margin-bottom: 2px; }
-        .item-info span { font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; opacity: 0.6; }
-
-        .del-btn { 
-            background: rgba(255, 68, 68, 0.1); color: var(--red); border: 1px solid var(--red); 
-            padding: 8px 12px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; transition: 0.3s;
-        }
-        .del-btn:hover { background: var(--red); color: white; }
+        .item-info strong { display: block; font-size: 14px; color: #eee; }
+        .del-btn { background: rgba(255, 68, 68, 0.1); color: var(--red); border: 1px solid var(--red); padding: 8px 12px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; }
     </style>
 </head>
 <body>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2 style="font-family:'Orbitron'; color:var(--cyan); font-size:14px; margin-bottom:20px;">OWNER ACCESS ONLY</h2>
+            <input type="password" id="passInput" placeholder="Masukkan Password..." style="text-align:center;">
+            <button onclick="checkPass()" id="btnSubmit">LOGIN SYSTEM</button>
+            <p id="errMsg" style="color:red; font-size:10px; margin-top:10px; display:none;">ACCESS DENIED!</p>
+        </div>
+    </div>
 
     <div class="admin-container">
         <h1 class="admin-logo">EAC <span>COMMAND CENTER</span></h1>
@@ -113,7 +96,6 @@
                 <textarea id="desc" rows="3" placeholder="Deskripsi Informasi..."></textarea>
                 <input type="text" id="img" placeholder="URL Gambar (Cloudinary/Link)">
                 <input type="text" id="link" placeholder="URL Tujuan / Link Download">
-                
                 <select id="category">
                     <option value="Planet">PLANET</option>
                     <option value="Galaksi">GALAKSI</option>
@@ -122,13 +104,12 @@
                     <option value="Misteri">MISTERI</option>
                     <option value="Teori">TEORI</option>
                 </select>
-
                 <button onclick="uploadData()" id="btnSubmit">PUBLIKASIKAN DATA</button>
             </div>
         </div>
 
         <div class="data-list">
-            <h3 id="listTitle">LIST: COSMIC_DATA</h3>
+            <h3 id="listTitle" style="text-align:center; font-size:10px; color:#555; margin-bottom:15px;">LIST: COSMIC_DATA</h3>
             <div id="adminTableContainer"></div>
         </div>
     </div>
@@ -136,6 +117,21 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // GANTI PASSWORD DI SINI!
+        const ADMIN_PASSWORD = "EAC_OWNER_2026"; 
+
+        window.checkPass = () => {
+            const input = document.getElementById('passInput').value;
+            if(input === ADMIN_PASSWORD) {
+                document.getElementById('loginOverlay').style.display = "none";
+                document.body.style.display = "block";
+                loadAdminData();
+            } else {
+                document.getElementById('errMsg').style.display = "block";
+                setTimeout(() => document.getElementById('errMsg').style.display = "none", 2000);
+            }
+        };
 
         const firebaseConfig = {
             apiKey: "AIzaSyB3XFfAwJbh0WHd7U_2tEazVgEg2bzbKTQ",
@@ -151,95 +147,54 @@
         const db = getDatabase(app);
         let currentTab = 'cosmic_data';
 
-        // --- SWITCH TAB LOGIC ---
         window.switchAdminTab = (tab, el) => {
             currentTab = tab;
             document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-
             const descField = document.getElementById('desc');
             const catField = document.getElementById('category');
-            const formTitle = document.getElementById('formTitle');
-            const listTitle = document.getElementById('listTitle');
-
-            // Reset Form View
-            descField.style.display = 'block';
-            catField.style.display = 'none';
-
-            if(tab === 'cosmic_data') {
-                catField.style.display = 'block';
-                formTitle.innerText = "INPUT DATA EDUKASI";
-            } else if(tab === 'music_data') {
-                descField.style.display = 'none';
-                formTitle.innerText = "INPUT MUSIC BARU";
-            } else {
-                formTitle.innerText = "INPUT " + tab.split('_')[0].toUpperCase();
-            }
-
-            listTitle.innerText = "LIST: " + tab.toUpperCase();
+            descField.style.display = tab === 'music_data' ? 'none' : 'block';
+            catField.style.display = tab === 'cosmic_data' ? 'block' : 'none';
+            document.getElementById('formTitle').innerText = "INPUT " + tab.toUpperCase();
+            document.getElementById('listTitle').innerText = "LIST: " + tab.toUpperCase();
             loadAdminData();
         };
 
-        // --- UPLOAD DATA ---
         window.uploadData = () => {
             const title = document.getElementById('title').value;
             const desc = document.getElementById('desc').value;
             const img = document.getElementById('img').value;
             const link = document.getElementById('link').value;
             const category = document.getElementById('category').value;
-
-            if(!title || !img || !link) return alert("Woi! Judul, Gambar, ama Link jangan kosong!");
-
-            const dbRef = ref(db, currentTab);
-            const newPostRef = push(dbRef);
-            
-            const dataToSave = { title, img, link, timestamp: Date.now() };
-            if(currentTab !== 'music_data') dataToSave.desc = desc;
-            if(currentTab === 'cosmic_data') dataToSave.category = category;
-
-            set(newPostRef, dataToSave).then(() => {
-                alert("Data Berhasil Mendarat di Database!");
+            if(!title || !img || !link) return alert("Lengkapi data!");
+            const newPostRef = push(ref(db, currentTab));
+            const data = { title, img, link, timestamp: Date.now() };
+            if(currentTab !== 'music_data') data.desc = desc;
+            if(currentTab === 'cosmic_data') data.category = category;
+            set(newPostRef, data).then(() => {
+                alert("Data Berhasil Diupload!");
                 document.querySelectorAll('input, textarea').forEach(i => i.value = '');
-            }).catch(err => alert("Gagal nyambung: " + err));
+            });
         };
 
-        // --- LOAD & DELETE DATA ---
         function loadAdminData() {
             const container = document.getElementById('adminTableContainer');
             onValue(ref(db, currentTab), (snapshot) => {
                 container.innerHTML = '';
-                if(!snapshot.exists()) {
-                    container.innerHTML = '<p style="text-align:center; color:#333; font-size:12px; margin-top:20px;">Belum ada data di folder ini.</p>';
-                    return;
-                }
-                
                 snapshot.forEach((child) => {
                     const item = child.val();
                     const key = child.key;
-                    
                     const row = document.createElement('div');
                     row.className = 'admin-item-row';
-                    row.innerHTML = `
-                        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/50'">
-                        <div class="item-info">
-                            <strong>${item.title}</strong>
-                            <span>KEY: ${key.substring(0,8)}...</span>
-                        </div>
-                        <button class="del-btn" onclick="deleteItem('${key}')">HAPUS</button>
-                    `;
+                    row.innerHTML = `<img src="${item.img}"><div class="item-info"><strong>${item.title}</strong><span>${key.substring(0,8)}</span></div><button class="del-btn" onclick="deleteItem('${key}')">HAPUS</button>`;
                     container.appendChild(row);
                 });
             });
         }
 
         window.deleteItem = (key) => {
-            if(confirm("Yakin mau hapus data ini, Owner?")) {
-                remove(ref(db, `${currentTab}/${key}`));
-            }
+            if(confirm("Hapus data?")) remove(ref(db, `${currentTab}/${key}`));
         };
-
-        // Boot system
-        loadAdminData();
     </script>
 </body>
 </html>
