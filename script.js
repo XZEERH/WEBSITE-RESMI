@@ -51,7 +51,7 @@ window.switchTab = (tabName, el) => {
 
     const header = document.querySelector('header');
     const container = document.getElementById('cardContainer');
-    
+
     if(tabName === 'cosmic_data') {
         header.style.display = 'block';
         container.style.marginTop = "0";
@@ -81,16 +81,25 @@ function renderCards(data, tab) {
     data.forEach(item => {
         const card = document.createElement('div');
         card.className = 'card fade-in';
-        
+
+        // SISTEM BARU: MUSIC PLAYER TERINTEGRASI
         if(tab === 'music_data') {
             card.style.borderLeft = "3px solid #39ff14";
             card.innerHTML = `
                 <img src="${item.img}" onerror="this.src='https://via.placeholder.com/400x200?text=No+Cover'">
                 <div class="card-info">
-                    <h3 style="color:#39ff14; font-family:'Orbitron'; font-size:14px;">${item.title}</h3>
-                    <a href="${item.link}" target="_blank" class="access-btn" style="padding:8px; margin-top:10px; font-size:10px; border-color:#39ff14; color:#39ff14; font-family:'Orbitron'; text-decoration:none; display:inline-block; text-align:center;">DOWNLOAD MP3</a>
+                    <h3 style="color:#39ff14; font-family:'Orbitron'; font-size:14px; margin-bottom:10px;">${item.title}</h3>
+                    
+                    <audio controls style="width: 100%; height: 32px; filter: invert(100%) hue-rotate(90deg) brightness(1.5); margin-bottom:10px;">
+                        <source src="${item.link}" type="audio/mpeg">
+                        Gak support audio jier.
+                    </audio>
+
+                    <a href="${item.link}" target="_blank" class="access-btn" style="padding:8px; font-size:10px; border-color:#39ff14; color:#39ff14; font-family:'Orbitron'; text-decoration:none; display:block; text-align:center;">DOWNLOAD MP3</a>
                 </div>`;
-        } else {
+        } 
+        // SISTEM LAMA: EDUKASI, BERITA, KOMUNITAS
+        else {
             card.innerHTML = `
                 <div style="position:absolute; top:10px; right:10px; background:#ffcc00; color:black; font-size:9px; font-weight:bold; padding:3px 8px; border-radius:3px; z-index:2; font-family:'Orbitron';">${(item.category || tab).toUpperCase()}</div>
                 <img src="${item.img}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Image+Not+Found'">
@@ -104,7 +113,7 @@ function renderCards(data, tab) {
     });
 }
 
-// --- OLD SYSTEMS ---
+// --- OLD SYSTEMS (DIPERTAHANKAN) ---
 window.searchData = () => {
     const q = document.getElementById('searchInput').value.toLowerCase();
     const filtered = cosmicData.filter(i => 
