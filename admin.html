@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAC COMMAND CENTER</title>
+    <title>ADMIN EAC CENTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root { --cyan: #00f2ff; --green: #39ff14; --red: #ff4444; --bg: #050508; --card: #0d0d12; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
-        /* LOGIN OVERLAY */
+        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; padding: 20px; }
+
+        /* --- LOGIN SYSTEM --- */
         #loginOverlay {
             position: fixed; top:0; left:0; width:100%; height:100%;
             background: #050508; z-index: 10000; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px;
+            padding: 20px; transition: 0.5s;
         }
         .login-box {
             background: var(--card); padding: 30px; border-radius: 15px;
@@ -22,94 +24,110 @@
             box-shadow: 0 0 20px rgba(0,242,255,0.2);
         }
 
-        body { 
-            background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; 
-            padding: 20px; display: none; /* Sembunyiin dulu sebelum login */
-        }
-
+        /* --- LAYOUT ADMIN --- */
         .admin-logo { font-family: 'Orbitron'; text-align: center; margin-bottom: 25px; letter-spacing: 3px; font-size: 20px; }
         .admin-logo span { color: var(--cyan); text-shadow: 0 0 15px var(--cyan); }
 
-        /* TAB NAVIGATION */
         .admin-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 25px; }
         .tab-item { 
             background: var(--card); border: 1px solid #1a1a1a; padding: 12px 5px; 
             display: flex; flex-direction: column; align-items: center; 
             border-radius: 8px; cursor: pointer; transition: 0.3s;
         }
-        .tab-item svg { width: 20px; height: 20px; margin-bottom: 6px; stroke: #444; }
+        .tab-item svg { width: 20px; height: 20px; margin-bottom: 6px; stroke: #444; transition: 0.3s; }
         .tab-item span { font-size: 7px; font-family: 'Orbitron'; color: #444; font-weight: bold; }
         .tab-item.active { border-color: var(--cyan); background: rgba(0,242,255,0.05); }
         .tab-item.active svg { stroke: var(--cyan); filter: drop-shadow(0 0 5px var(--cyan)); }
         .tab-item.active span { color: var(--cyan); }
 
-        /* FORM & DATA */
+        /* --- FORM STYLING --- */
         .form-card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #1a1a1a; margin-bottom: 25px; }
         .form-card h2 { font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; color: var(--cyan); border-left: 3px solid var(--cyan); padding-left: 10px; }
-        input, textarea, select { width: 100%; background: #08080a; border: 1px solid #222; padding: 12px; color: white; margin-bottom: 12px; border-radius: 6px; outline: none; font-family: 'Rajdhani'; }
-        #btnSubmit { width: 100%; padding: 15px; background: var(--cyan); color: black; border: none; font-family: 'Orbitron'; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        
+        input, textarea, select { 
+            width: 100%; background: #08080a; border: 1px solid #222; 
+            padding: 12px; color: white; margin-bottom: 12px; border-radius: 6px; 
+            outline: none; font-family: 'Rajdhani'; transition: 0.3s;
+        }
+        input:focus { border-color: var(--cyan); }
 
-        .admin-item-row { display: flex; align-items: center; background: #0d0d12; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #1a1a1a; }
+        #btnSubmit { 
+            width: 100%; padding: 15px; background: var(--cyan); color: black; 
+            border: none; font-family: 'Orbitron'; font-weight: bold; border-radius: 6px;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        /* --- LIST DATA --- */
+        .admin-item-row { 
+            display: flex; align-items: center; background: #0d0d12; padding: 12px; 
+            border-radius: 8px; margin-bottom: 10px; border: 1px solid #1a1a1a; 
+            animation: fadeIn 0.4s ease;
+        }
         .admin-item-row img { width: 45px; height: 45px; border-radius: 4px; object-fit: cover; }
         .item-info { flex-grow: 1; margin-left: 12px; }
         .item-info strong { display: block; font-size: 14px; color: #eee; }
-        .del-btn { background: rgba(255, 68, 68, 0.1); color: var(--red); border: 1px solid var(--red); padding: 8px 12px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; }
+        .item-info span { font-size: 9px; color: #555; font-family: 'Orbitron'; }
+
+        .del-btn { 
+            background: rgba(255, 68, 68, 0.1); color: var(--red); border: 1px solid var(--red); 
+            padding: 8px 12px; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 8px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div id="loginOverlay">
         <div class="login-box">
-            <h2 style="font-family:'Orbitron'; color:var(--cyan); font-size:14px; margin-bottom:20px;">ADMIN ACCESS ONLY</h2>
-            <input type="password" id="passInput" placeholder="Masukkan Password..." style="text-align:center;">
-            <button onclick="checkPass()" id="btnSubmit">LOGIN SYSTEM</button>
+            <h2 style="font-family:'Orbitron'; color:var(--cyan); font-size:14px; margin-bottom:20px;">OWNER ACCESS ONLY</h2>
+            <input type="password" id="passInput" placeholder="Password System..." style="text-align:center;">
+            <button onclick="checkPass()" id="btnSubmit">UNLOCK SYSTEM</button>
             <p id="errMsg" style="color:red; font-size:10px; margin-top:10px; display:none;">ACCESS DENIED!</p>
         </div>
     </div>
 
-    <div class="admin-container">
-        <h1 class="admin-logo">EAC <span>ADMIN CENTER</span></h1>
+    <div id="adminMain" style="display:none;">
+        <h1 class="admin-logo">EAC <span>COMMAND CENTER</span></h1>
         
         <div class="admin-tabs">
-            <div class="tab-item active" onclick="switchAdminTab('cosmic_data', this)">
+            <div class="tab-item active" onclick="switchTab('cosmic_data', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                 <span>EDUKASI</span>
             </div>
-            <div class="tab-item" onclick="switchAdminTab('music_data', this)">
+            <div class="tab-item" onclick="switchTab('music_data', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                 <span>MUSIC</span>
             </div>
-            <div class="tab-item" onclick="switchAdminTab('community_data', this)">
+            <div class="tab-item" onclick="switchTab('community_data', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                <span>COMMUNITY</span>
+                <span>KOMUNITAS</span>
             </div>
-            <div class="tab-item" onclick="switchAdminTab('news_data', this)">
+            <div class="tab-item" onclick="switchTab('news_data', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span>NEWS</span>
+                <span>BERITA</span>
             </div>
         </div>
 
         <div class="form-card">
             <h2 id="formTitle">INPUT DATA EDUKASI</h2>
-            <div class="input-group">
-                <input type="text" id="title" placeholder="Judul / Nama Objek">
-                <textarea id="desc" rows="3" placeholder="Deskripsi Informasi..."></textarea>
-                <input type="text" id="img" placeholder="URL Gambar (Cloudinary/Link)">
-                <input type="text" id="link" placeholder="URL Tujuan / Link Download">
-                <select id="category">
-                    <option value="Planet">PLANET</option>
-                    <option value="Galaksi">GALAKSI</option>
-                    <option value="Bintang">BINTANG</option>
-                    <option value="Objek">OBJEK</option>
-                    <option value="Misteri">MISTERI</option>
-                    <option value="Teori">TEORI</option>
-                </select>
-                <button onclick="uploadData()" id="btnSubmit">PUBLIKASIKAN DATA</button>
-            </div>
+            <input type="text" id="title" placeholder="Judul">
+            <textarea id="desc" rows="3" placeholder="Deskripsi..."></textarea>
+            <input type="text" id="img" placeholder="URL Gambar (Cloudinary/Link)">
+            <input type="text" id="link" placeholder="URL Link/Tujuan">
+            <select id="category">
+                <option value="Planet">PLANET</option>
+                <option value="Galaksi">GALAKSI</option>
+                <option value="Bintang">BINTANG</option>
+                <option value="Objek">OBJEK</option>
+                <option value="Misteri">MISTERI</option>
+                <option value="Teori">TEORI</option>
+            </select>
+            <button onclick="uploadData()" id="btnSubmit">PUBLISH TO DATABASE</button>
         </div>
 
         <div class="data-list">
-            <h3 id="listTitle" style="text-align:center; font-size:10px; color:#555; margin-bottom:15px;">LIST: COSMIC_DATA</h3>
+            <h3 id="listTitle" style="text-align:center; font-size:10px; color:#555; margin-bottom:15px; font-family:'Orbitron';">LIST DATA</h3>
             <div id="adminTableContainer"></div>
         </div>
     </div>
@@ -118,20 +136,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // GANTI PASSWORD DI SINI!
+        // PASSWORD OWNER
         const ADMIN_PASSWORD = "ADMIN EAC 2026"; 
-
-        window.checkPass = () => {
-            const input = document.getElementById('passInput').value;
-            if(input === ADMIN_PASSWORD) {
-                document.getElementById('loginOverlay').style.display = "none";
-                document.body.style.display = "block";
-                loadAdminData();
-            } else {
-                document.getElementById('errMsg').style.display = "block";
-                setTimeout(() => document.getElementById('errMsg').style.display = "none", 2000);
-            }
-        };
 
         const firebaseConfig = {
             apiKey: "AIzaSyB3XFfAwJbh0WHd7U_2tEazVgEg2bzbKTQ",
@@ -147,17 +153,27 @@
         const db = getDatabase(app);
         let currentTab = 'cosmic_data';
 
-        window.switchAdminTab = (tab, el) => {
+        window.checkPass = () => {
+            const input = document.getElementById('passInput').value;
+            if(input === ADMIN_PASSWORD) {
+                document.getElementById('loginOverlay').style.display = "none";
+                document.getElementById('adminMain').style.display = "block";
+                loadData();
+            } else {
+                document.getElementById('errMsg').style.display = "block";
+                setTimeout(() => document.getElementById('errMsg').style.display = "none", 2000);
+            }
+        };
+
+        window.switchTab = (tab, el) => {
             currentTab = tab;
             document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            const descField = document.getElementById('desc');
-            const catField = document.getElementById('category');
-            descField.style.display = tab === 'music_data' ? 'none' : 'block';
-            catField.style.display = tab === 'cosmic_data' ? 'block' : 'none';
-            document.getElementById('formTitle').innerText = "INPUT " + tab.toUpperCase();
-            document.getElementById('listTitle').innerText = "LIST: " + tab.toUpperCase();
-            loadAdminData();
+            
+            document.getElementById('desc').style.display = tab === 'music_data' ? 'none' : 'block';
+            document.getElementById('category').style.display = tab === 'cosmic_data' ? 'block' : 'none';
+            document.getElementById('formTitle').innerText = "INPUT " + tab.split('_')[0].toUpperCase();
+            loadData();
         };
 
         window.uploadData = () => {
@@ -166,34 +182,47 @@
             const img = document.getElementById('img').value;
             const link = document.getElementById('link').value;
             const category = document.getElementById('category').value;
-            if(!title || !img || !link) return alert("Lengkapi data!");
-            const newPostRef = push(ref(db, currentTab));
-            const data = { title, img, link, timestamp: Date.now() };
-            if(currentTab !== 'music_data') data.desc = desc;
-            if(currentTab === 'cosmic_data') data.category = category;
-            set(newPostRef, data).then(() => {
-                alert("Data Berhasil Diupload!");
+
+            if(!title || !img || !link) return alert("Data wajib diisi!");
+
+            const dbRef = ref(db, currentTab);
+            const newDataRef = push(dbRef);
+            const payload = { title, img, link, timestamp: Date.now() };
+
+            if(currentTab !== 'music_data') payload.desc = desc;
+            if(currentTab === 'cosmic_data') payload.category = category;
+
+            set(newDataRef, payload).then(() => {
+                alert("Berhasil!");
                 document.querySelectorAll('input, textarea').forEach(i => i.value = '');
             });
         };
 
-        function loadAdminData() {
+        function loadData() {
             const container = document.getElementById('adminTableContainer');
-            onValue(ref(db, currentTab), (snapshot) => {
+            onValue(ref(db, currentTab), (snap) => {
                 container.innerHTML = '';
-                snapshot.forEach((child) => {
+                if(!snap.exists()) return container.innerHTML = "<p style='text-align:center; color:#333;'>Kosong.</p>";
+                
+                snap.forEach((child) => {
                     const item = child.val();
-                    const key = child.key;
                     const row = document.createElement('div');
                     row.className = 'admin-item-row';
-                    row.innerHTML = `<img src="${item.img}"><div class="item-info"><strong>${item.title}</strong><span>${key.substring(0,8)}</span></div><button class="del-btn" onclick="deleteItem('${key}')">HAPUS</button>`;
+                    row.innerHTML = `
+                        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/50'">
+                        <div class="item-info">
+                            <strong>${item.title}</strong>
+                            <span>KEY: ${child.key.substring(0,6)}</span>
+                        </div>
+                        <button class="del-btn" onclick="deleteItem('${child.key}')">HAPUS</button>
+                    `;
                     container.appendChild(row);
                 });
             });
         }
 
         window.deleteItem = (key) => {
-            if(confirm("Hapus data?")) remove(ref(db, `${currentTab}/${key}`));
+            if(confirm("Hapus data ini?")) remove(ref(db, `${currentTab}/${key}`));
         };
     </script>
 </body>
