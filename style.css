@@ -1,38 +1,26 @@
-:root { --cyan: #00f2ff; --bg: #020205; --card: #0d0d12; --border: #1a1a1a; }
-body { margin: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+/* LOGIN CENTER */
+.login-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; display: flex; justify-content: center; z-index: 100; }
+.login-card { background: #0d0d12; border: 1px solid var(--cyan); padding: 25px; border-radius: 15px; width: 80%; text-align: center; }
+.login-card h3 { font-family: 'Orbitron'; font-size: 14px; margin-bottom: 20px; color: var(--cyan); }
+.login-card input { width: 100%; padding: 12px; margin-bottom: 10px; background: #050508; border: 1px solid #222; color: white; border-radius: 5px; box-sizing: border-box; }
+.login-card button { width: 100%; padding: 12px; background: var(--cyan); color: black; border: none; border-radius: 5px; font-weight: bold; font-family: 'Orbitron'; }
 
-/* HEADER & STATUS */
-header { padding: 20px; text-align: center; background: linear-gradient(to bottom, #050510, transparent); }
-.top-title { font-size: 10px; letter-spacing: 3px; color: #555; margin: 0; }
-.main-logo { font-family: 'Orbitron'; font-size: 22px; margin: 5px 0; letter-spacing: 2px; }
-.main-logo span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-.status-bar { font-size: 10px; color: #555; margin-bottom: 15px; font-family: 'Orbitron'; }
-.signal b { color: #39ff14; }
+/* MUSIC PAGE: Non-Clickable Card + Download */
+.music-item { display: flex; align-items: center; justify-content: space-between; background: var(--card); border: 1px solid #111; margin-bottom: 10px; border-radius: 10px; padding: 10px; }
+.music-info { display: flex; align-items: center; gap: 12px; }
+.music-img { width: 50px; height: 50px; border-radius: 5px; object-fit: cover; }
+.dl-btn { background: none; border: 1px solid var(--cyan); color: var(--cyan); padding: 5px 10px; border-radius: 5px; font-size: 10px; text-decoration: none; }
 
-/* CARD DESIGN (FIXED ICON/BADGE) */
-.main-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; padding: 15px; padding-bottom: 120px; }
-.card { position: relative; background: var(--card); border-radius: 12px; border: 1px solid #111; overflow: hidden; }
-.card-badge { position: absolute; top: 12px; right: 12px; background: var(--cyan); color: black; font-size: 9px; font-weight: bold; padding: 4px 10px; border-radius: 4px; font-family: 'Orbitron'; z-index: 10; }
-.card img { width: 100%; height: 180px; object-fit: cover; opacity: 0.8; }
-.card-info { padding: 15px; border-left: 3px solid var(--cyan); background: linear-gradient(90deg, #0a0a0f, transparent); }
-.card-info h3 { margin: 0; font-family: 'Orbitron'; font-size: 15px; color: var(--cyan); text-transform: uppercase; }
-.card-info p { font-size: 12px; color: #888; margin-top: 8px; line-height: 1.5; }
+/* CHAT INTERACTION (Like/Dislike/Balas) */
+.iea-actions { display: flex; gap: 15px; margin-top: 10px; }
+.action-btn { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #555; background: none; border: none; cursor: pointer; }
+.action-btn svg { width: 14px; fill: currentColor; }
+.action-btn:hover { color: var(--cyan); }
 
-/* CHAT IEA FEED */
-.iea-post { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
-.post-tag { display: inline-block; background: rgba(0,242,255,0.1); color: var(--cyan); font-size: 10px; padding: 3px 10px; border-radius: 5px; margin-bottom: 10px; border-left: 2px solid var(--cyan); font-style: italic; }
-.reply-container { margin-left: 15px; border-left: 2px solid #222; padding-left: 12px; margin-top: 10px; }
-.iea-reply { background: #08080a; padding: 8px; border-radius: 6px; margin-bottom: 5px; font-size: 12px; border: 1px solid #111; }
+/* SVG NAV ICON */
+.nav-item svg { width: 22px; height: 22px; fill: #444; margin-bottom: 4px; transition: 0.3s; }
+.nav-item.active svg { fill: var(--cyan); filter: drop-shadow(0 0 5px var(--cyan)); }
 
-/* MODAL PROFILE */
-.modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
-.profile-card { width: 85%; background: #0d0d0d; border: 1px solid #222; border-radius: 20px; padding: 30px 20px; text-align: center; position: relative; }
-.avatar-large { width: 80px; height: 80px; background: #1a1a1a; border-radius: 20px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; border: 1px solid var(--cyan); }
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; background: #080808; padding: 15px; border-radius: 12px; margin: 20px 0; border: 1px solid #151515; }
-.logout-btn { width: 100%; background: none; border: 1px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 10px; margin-top: 10px; }
-
-/* FOOTER & NAV */
-.system-footer { position: fixed; bottom: 85px; width: 100%; text-align: center; color: #222; font-family: 'Orbitron'; font-size: 8px; z-index: 90; }
-.bottom-nav { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); width: 92%; height: 60px; background: rgba(10,10,15,0.95); border-radius: 20px; display: flex; justify-content: space-around; align-items: center; z-index: 1000; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.nav-item { color: #444; font-family: 'Orbitron'; font-size: 10px; text-align: center; }
-.nav-item.active { color: var(--cyan); }
+/* SECTION TITLES */
+.section-title { font-family: 'Orbitron'; font-size: 16px; text-align: center; margin: 20px 0; color: white; }
+.section-title span { color: var(--cyan); }
