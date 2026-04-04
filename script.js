@@ -16,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 let cosmicData = []; 
 
-// --- INITIALIZING ---
+// --- INITIALIZING SYSTEM ---
 window.addEventListener('load', () => {
     const overlay = document.getElementById('welcomeOverlay');
     const text = document.getElementById('welcomeText');
@@ -54,6 +54,7 @@ window.switchTab = (tabName, el) => {
     
     if(tabName === 'cosmic_data') {
         header.style.display = 'block';
+        container.style.marginTop = "0";
     } else {
         header.style.display = 'none';
         container.style.marginTop = "20px";
@@ -62,8 +63,10 @@ window.switchTab = (tabName, el) => {
 };
 
 function loadContent(tabName) {
-    onValue(ref(db, tabName), (snapshot) => {
-        const dataArray = snapshot.val() ? Object.values(snapshot.val()).reverse() : [];
+    const dataRef = ref(db, tabName);
+    onValue(dataRef, (snapshot) => {
+        const rawData = snapshot.val();
+        const dataArray = rawData ? Object.values(rawData).reverse() : [];
         if(tabName === 'cosmic_data') cosmicData = dataArray;
         renderCards(dataArray, tabName);
     });
@@ -72,6 +75,7 @@ function loadContent(tabName) {
 // --- RENDERING ---
 function renderCards(data, tab) {
     const container = document.getElementById('cardContainer');
+    if(!container) return;
     container.innerHTML = '';
 
     data.forEach(item => {
@@ -83,13 +87,13 @@ function renderCards(data, tab) {
             card.innerHTML = `
                 <img src="${item.img}" onerror="this.src='https://via.placeholder.com/400x200?text=No+Cover'">
                 <div class="card-info">
-                    <h3 style="color:#39ff14">${item.title}</h3>
-                    <a href="${item.link}" target="_blank" class="access-btn" style="padding:8px; margin-top:10px; font-size:10px; border-color:#39ff14; color:#39ff14">DOWNLOAD MP3</a>
+                    <h3 style="color:#39ff14; font-family:'Orbitron'; font-size:14px;">${item.title}</h3>
+                    <a href="${item.link}" target="_blank" class="access-btn" style="padding:8px; margin-top:10px; font-size:10px; border-color:#39ff14; color:#39ff14; font-family:'Orbitron'; text-decoration:none; display:inline-block; text-align:center;">DOWNLOAD MP3</a>
                 </div>`;
         } else {
             card.innerHTML = `
                 <div style="position:absolute; top:10px; right:10px; background:#ffcc00; color:black; font-size:9px; font-weight:bold; padding:3px 8px; border-radius:3px; z-index:2; font-family:'Orbitron';">${(item.category || tab).toUpperCase()}</div>
-                <img src="${item.img}" loading="lazy">
+                <img src="${item.img}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x200?text=Image+Not+Found'">
                 <div class="card-info">
                     <h3>${item.title}</h3>
                     <p>${item.desc ? item.desc.substring(0, 60) : '...'}...</p>
@@ -103,7 +107,9 @@ function renderCards(data, tab) {
 // --- OLD SYSTEMS ---
 window.searchData = () => {
     const q = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = cosmicData.filter(i => i.title.toLowerCase().includes(q));
+    const filtered = cosmicData.filter(i => 
+        i.title.toLowerCase().includes(q) || (i.category && i.category.toLowerCase().includes(q))
+    );
     renderCards(filtered, 'cosmic_data');
 };
 
@@ -114,19 +120,21 @@ window.filterData = (cat) => {
 };
 
 window.openModal = (item) => {
+    const modal = document.getElementById('modal');
     document.getElementById('modalTitle').innerText = item.title;
     document.getElementById('modalImg').src = item.img;
     document.getElementById('modalDesc').innerText = item.desc;
     document.getElementById('modalTag').innerText = (item.category || "OBJECT").toUpperCase();
     document.getElementById('modalLink').href = item.link;
-    document.getElementById('modal').style.display = "block";
+    if(modal) modal.style.display = "block";
 };
 
 window.closeModal = () => document.getElementById('modal').style.display = "none";
 
 function updateWifi() {
     const start = Date.now();
-    fetch('https://www.google.com/favicon.ico', { mode: 'no-cors' }).then(() => {
+    fetch('https://www.google.com/favicon.ico', { mode: 'no-cors' })
+    .then(() => {
         document.getElementById('ping-ms').innerText = (Date.now() - start) + "ms";
     });
 }
