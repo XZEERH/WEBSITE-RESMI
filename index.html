@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EAC COSMIC DATABASE - V2</title>
+    <title>EAC COSMIC DATABASE - V2.1</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -25,11 +25,6 @@
             <input type="text" id="searchInput" placeholder="Cari Informasi Kosmik..." onkeyup="searchData()">
         </div>
 
-        <div class="status-row">
-            <div class="status-active"><div class="pulse-dot"></div><span>SISTEM AKTIF</span></div>
-            <div class="signal-monitor"><span id="wifi-icon">SIGNAL</span> <span id="ping-ms">00ms</span></div>
-        </div>
-
         <div class="filter-grid">
             <button class="filter-btn active" onclick="filterData('all')">SEMUA</button>
             <button class="filter-btn" onclick="filterData('Planet')">PLANET</button>
@@ -45,39 +40,53 @@
         <div id="cardContainer" class="main-grid fade-in"></div>
     </main>
 
-    <section id="musicSection" class="tab-content" style="display:none; padding: 20px;">
+    <section id="musicSection" class="tab-content" style="display:none;">
         <h2 class="section-title">COSMIC BEAT</h2>
         <div id="musicContainer" class="main-grid"></div>
     </section>
 
-    <section id="infoSection" class="tab-content" style="display:none; padding: 20px;">
+    <section id="infoSection" class="tab-content" style="display:none;">
         <h2 class="section-title" style="color:var(--green)">COMMUNITY INFO</h2>
         <div id="infoContainer" class="main-grid"></div>
     </section>
 
-    <section id="commentSection" class="tab-content" style="display:none; padding: 20px; padding-bottom: 120px;">
+    <section id="comSection" class="tab-content" style="display:none;">
         <h2 class="section-title" style="color:#ff00ff">PUBLIC TRANSMISSION</h2>
-        <div class="comment-input-box">
-            <input type="text" id="comName" placeholder="Nama Anda...">
-            <textarea id="comText" placeholder="Berikan kritik atau pujian..."></textarea>
-            <button onclick="sendComment()">KIRIM SINYAL</button>
+        <div id="chatAuth" class="chat-form">
+            <p class="chat-label">IDENTITAS TRANSMISI</p>
+            <input type="text" id="chatUser" placeholder="Nama Anda...">
+            <input type="password" id="chatPass" placeholder="Password (Bebas)...">
+            <button onclick="loginChat()">HUBUNGKAN SINYAL</button>
         </div>
-        <div id="commentContainer"></div>
+        <div id="chatBox" class="chat-form" style="display:none;">
+            <p id="activeUser" class="user-active-tag"></p>
+            <textarea id="comText" placeholder="Tulis pesan ke publik..."></textarea>
+            <button onclick="sendComment()">KIRIM PESAN</button>
+            <span class="logout-btn" onclick="logoutChat()">Ganti Identitas</span>
+        </div>
+        <div id="commentContainer" style="padding:0 20px;"></div>
     </section>
 
     <div id="modal" class="modal">
         <div class="modal-overlay" onclick="closeModal()"></div>
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
-            <img id="modalImg" src="">
+            <div class="modal-img-wrapper">
+                <img id="modalImg" src="">
+            </div>
             <div class="modal-body">
                 <h2 id="modalTitle"></h2>
                 <div class="tag-label" id="modalTag">OBJECT</div>
                 <p id="modalDesc"></p>
+                <div class="integrity-badge">
+                    <span>DATA INTEGRITY: <span style="color:var(--green)">100% VERIFIED INTEGRATED</span></span>
+                </div>
                 <a id="modalLink" href="#" target="_blank" class="access-btn">BACA RISET LENGKAP →</a>
             </div>
         </div>
     </div>
+
+    <footer><div class="system-footer">SISTEM TERKENDALI AMAN</div></footer>
 
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('edu', this)">
@@ -98,7 +107,6 @@
         </div>
     </nav>
 
-    <footer><div class="system-footer">SISTEM TERKENDALI | EAC PUSAT INFORMASI</div></footer>
     <script type="module" src="script.js"></script>
 </body>
 </html>
